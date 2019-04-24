@@ -1,0 +1,252 @@
+<!-- INCLUDE overall_header.html -->
+<!-- INCLUDECSS home_style.css -->
+
+<div class="gc_homepage">
+	<div> <!-- Left Column -->
+		<div class="panel gc_homepage_col">
+			<h2>Welcome to GC</h2>
+			<h3>Start Here!</h3>
+			<ul>
+				<li><a href="whatisgc.php">What is GC?</a></li>
+				<li><a href="gettingstartedatGC.php">Getting Started at GC?</a></li>
+				<li><a href="whatisSBT_&_worldclock.php">What is SBT?</a></li>
+			</ul>
+			<h3>Content</h3>
+			<ul>
+				<li><a href="index.php">Forum</a></li>
+				<li><a href="search.php">Search</a></li>
+				<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+					<li><a href="{U_REGISTER}">Register</a></li>
+				<!-- ELSE -->
+					<li><a href="memberlist.php">Members</a></li>
+				<!-- ENDIF -->
+				<li><a href="memberlist.php?mode=leaders">The Team</a></li>
+			</ul>
+			<h3>Content</h3>
+			<ul>
+				<li><a href="faq.php">FAQ</a></li>
+				<li><a href="faq.php?mode=bbcode">BBCode FAQ</a></li>
+				<li><a href="ucp.php?mode=terms">Terms of Use</a></li>
+				<li><a href="ucp.php?mode=privacy">Privacy Policy</a></li>
+			</ul>
+		</div>
+		<!-- GC Discord Widget -->
+		<iframe src="https://discordapp.com/widget?id=218059966441979905&theme=dark" width="225" height="500" allowtransparency="true" frameborder="0"></iframe>
+	</div>
+	
+	<div><!-- Centre Column -->
+		<!-- IF not S_USER_LOGGED_IN -->
+			<!-- Anonomous User Welcome -->
+			<div class="panel gc_homepage_col">
+				<div class="inner">
+					<h2>Welcome!</h2>
+					Welcome to the =GC= Forums! To learn more and get started, visit the 
+					<a href="http://www.global-conflict.org/viewforum.php?f=263" class="postlink">new recruits welcome forum</a> 
+					and our <a href="http://www.global-conflict.org/viewtopic.php?f=263&amp;t=14835" class="postlink">simple setup guide</a>.
+					<br><br>
+					To see all of our forums, you'll need an account. Please <a href="http://global-conflict.org/ucp.php?mode=login" class="postlink">log in</a> 
+					or <a href="http://global-conflict.org/ucp.php?mode=register" class="postlink">register</a>.
+					<br><br>
+					If you need help, you can also <a href="https://discord.gg/yff7XfD" class="postlink">join our Discord server</a>.
+				</div>
+			</div>
+		<!-- ENDIF -->
+		<!-- Battleday Countdown -->
+		<!-- IF B_BATTLE -->
+			<div class="panel gc_homepage_col">
+				<div class="gc_homepage_counter">
+					<div id="battleday-countdown"></div>
+				</div>
+				<div class="gc_homepage_time">{BATTLE_DATE}</div>
+				<br>
+				<div style="text-align: center">{SBT}</div>
+			</div>
+			
+			<script>
+				var x = setInterval(function()
+				{
+					var now = new Date().getTime();
+					var start_time = new Date({T_BD_START});
+					var end_time = new Date({T_BD_END});
+					
+					if(now < start_time)
+					{
+						var distance = start_time - now;
+						var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+						var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						var mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						var secs = Math.floor((distance % (1000 * 60)) / 1000);
+						document.getElementById("battleday-countdown").innerHTML = "Next battle is <font color=\"red\">{BATTLE_NAME}</font> in:<br>" +
+							days + " Days, " + hours + " Hours, "+ mins + " Minutes, " + secs + " Seconds";
+					}
+					else if(now < end_time)
+					{
+						document.getElementById("battleday-countdown").innerHTML = "<font color=\"red\">{BATTLE_NAME}</font> is <font color=\"green\">LIVE!</font>";
+					}
+					else
+					{
+						document.getElementById("battleday-countdown").innerHTML = "<font color=\"red\">ERROR!</font>";
+					}
+				}, 1000);
+			</script>
+		<!-- ENDIF -->
+		<!-- GC History -->
+		<div class="panel gc_homepage_col">
+			<div style="text-align:center;">
+				<h2>The History of Global-Conflict</h2>
+				<a href="/images/GCTimeline/gctimeline.jpg" target="new">
+					<img src="/images/GCTimeline/gctimeline_small.jpg" width="620">
+				</a>
+			</div>
+		</div>
+		<!-- Announcements -->
+		<div class="panel gc_announcements">
+			<h2>Announcements</h2>
+			{HOME_ANNO}
+		</div>
+		<!-- Trailor -->
+		<div class="postbody" style="width: 100%; text-align: center;">
+			<iframe width="560" height="315" src="//www.youtube.com/embed/5P0-bPMK49s" frameborder="0" allowfullscreen=""></iframe>
+		</div>		
+	</div>
+	
+	<div> <!-- Right Column -->
+		<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+			<!-- Anonomous User Login -->
+			<form action="{S_LOGIN_ACTION}" method="post" id="login" data-focus="username">
+				<div class="panel gc_homepage_col">
+					<div class="inner">
+						<div class="content">
+							<h2>Login</h2>
+							<fieldset class="fields1">
+								<div>
+									<label class="gc_login" for="username">{L_USERNAME}{L_COLON}</label>
+									<input type="text" tabindex="1" name="username" id="username" size="25" value="" class="inputbox autowidth gc_login">
+								</div>
+								<div>
+									<label class="gc_login" for="password">{L_PASSWORD}{L_COLON}</label>
+									<input type="password" tabindex="2" id="password" name="password" size="25" class="inputbox autowidth gc_login" autocomplete="off">
+									<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+								</div>
+								<div>
+									<label for="autologin"><input type="checkbox" name="autologin" id="autologin" tabindex="4"> {L_LOG_ME_IN}</label><br>
+									<label for="viewonline"><input type="checkbox" name="viewonline" id="viewonline" tabindex="5"> Hide my online status this session</label>
+								</div>
+								
+								<!-- <input type="hidden" name="redirect" value="./ucp.php?mode=login&amp;sid=d3112272b07ecc288a53e8479e56185a"> -->
+
+								<div>
+									<br>
+									<input type="hidden" name="sid" value="d3112272b07ecc288a53e8479e56185a">
+									<input type="hidden" name="redirect" value="home.php">
+									<input type="submit" name="login" tabindex="6" value="Login" class="button1">
+								</div>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</form>
+		<!-- ELSE -->
+			<div class="panel gc_homepage_col">
+				<h2>User Menu</h2>
+				<div style="text-align: center">
+					<a href="{U_ABC_PAGE}"><img src="/styles/home_page/abc.png" alt=""></a>
+				</div>
+				<h3>Forum Menu</h3>
+				<ul>
+					<li><a href="search.php?search_id=newposts">{L_NEW_POSTS}</a></li>
+					<li><a href="search.php?search_id=unreadposts">{L_UNREAD_POSTS}</a></li>
+					<li><a href="search.php?search_id=egosearch">{L_SELF_POSTS}</a></li>
+					<li><a href="ucp.php?i=ucp_main&mode=bookmarks">Bookmarks</a></li>
+					<li><a href="ucp.php?i=main&mode=subscribed">Subscribed</a></li>
+					<li><a href="ucp.php?i=pm&folder=inbox">{L_UNREAD_PM}</a></li>
+					<li><a href="ucp.php">User Control Panel</a></li>
+					<!-- IF U_MCP -->
+						<li><a href="{U_MCP}">Moderator Control Panel</a></li>
+					<!-- ENDIF -->
+					<!-- IF U_ACP -->
+						<li><a href="{U_ACP}">Admin Control Panel</a></li>
+					<!-- ENDIF -->
+					<li><a href="ucp.php?mode=logout">{L_HP_LOG_OUT}</a></li>
+				</ul>
+			</div>
+		<!-- ENDIF -->
+		<!-- Social Media Links -->
+		<div class="panel gc_homepage_col">
+			<h2>Links</h2>
+			<div style="text-align: center;">
+				<a href="https://discord.gg/yff7XfD"><img src="/styles/home_page/discord.png"></a><br>
+				<a href="http://www.youtube.com/user/GlobalConflictVideos"><img src="/styles/home_page/youtube.png"></a><br>
+				<a href="http://www.twitch.tv/globalconflict"><img src="/styles/home_page/twitch.png"></a><br>
+				<a href="http://www.facebook.com/GlobalConflictOrg"><img src="/styles/home_page/facebook.png"></a><br>
+				<a href="http://steamcommunity.com/groups/GC-community"><img src="/styles/home_page/steam.png"></a><br>
+				<a href="https://twitter.com/gc_org"><img src="/styles/home_page/twitter.png"></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- EVENT index_body_forumlist_body_after -->
+
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
+	<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><!-- IF S_REGISTER_ENABLED -->&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --></h3>
+		<fieldset class="quick-login">
+			<label for="username"><span>{L_USERNAME}{L_COLON}</span> <input type="text" tabindex="6" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" /></label>
+			<label for="password"><span>{L_PASSWORD}{L_COLON}</span> <input type="password" tabindex="7" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" autocomplete="off" /></label>
+			<!-- IF U_SEND_PASSWORD -->
+				<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+			<!-- ENDIF -->
+			<!-- IF S_AUTOLOGIN_ENABLED -->
+				<span class="responsive-hide">|</span> <label for="autologin">{L_LOG_ME_IN} <input type="checkbox" tabindex="9" name="autologin" id="autologin" /></label>
+			<!-- ENDIF -->
+			<input type="submit" tabindex="10" name="login" value="{L_LOGIN}" class="button2" />
+			{S_LOGIN_REDIRECT}
+		</fieldset>
+	</form>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_stat_blocks_before -->
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<div class="stat-block online-list">
+		<!-- IF U_VIEWONLINE --><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3>{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
+		<p>
+			<!-- EVENT index_body_block_online_prepend -->
+			{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> 
+			<!-- IF U_VIEWONLINE -->
+				<br />{LOGGED_IN_USER_LIST}
+				<!-- IF LEGEND --><br /><em>{L_LEGEND}{L_COLON} {LEGEND}</em><!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- EVENT index_body_block_online_append -->
+		</p>
+	</div>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_birthday_block_before -->
+
+<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
+	<div class="stat-block birthday-list">
+		<h3>{L_BIRTHDAYS}</h3>
+		<p>
+			<!-- EVENT index_body_block_birthday_prepend -->
+			<!-- IF .birthdays -->{L_CONGRATULATIONS}{L_COLON} <strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF -->
+			<!-- EVENT index_body_block_birthday_append -->
+		</p>
+	</div>
+<!-- ENDIF -->
+
+<!-- IF NEWEST_USER -->
+	<div class="stat-block statistics">
+		<h3>{L_STATISTICS}</h3>
+		<p>
+			<!-- EVENT index_body_block_stats_prepend -->
+			{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}
+			<!-- EVENT index_body_block_stats_append -->
+		</p>
+	</div>
+<!-- ENDIF -->
+
+<!-- EVENT index_body_stat_blocks_after -->
+
+<!-- INCLUDE overall_footer.html -->

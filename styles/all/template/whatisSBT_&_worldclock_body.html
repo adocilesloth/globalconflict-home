@@ -1,0 +1,160 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>What is Standard battle time aka SBT</h2>
+
+<div class="panel">
+   <div class="inner"><span class="corners-top"><span></span></span>
+
+   <div class="content">
+      <p>
+         <font size = 2>
+<br/>
+In many instances you will see reference to SBT. SBT = Standard Battle Time. Its not a time zone nor is it related to an actual timezone, the Salomon Islands Time. Of course SBT is different for every time-zone but it is also a constant that you can work off of. My SBT is 10:00 or 10am Pacific Standard Time - this is when I battle on Saturday. Yours is probably different. If I want to meet you at Noon my time (PST), then I would refer to SBT+2. If you lived in central Germany or CET time zone, then your SBT would be 19:00 hrs (7pm CET) so for you SBT+2 would be 21:00 hrs. It saves the math. Reference every time to SBT so there is no confusion. If you are still confused please ask for clarification.
+<br/>
+<br/>		 
+<br/>
+<b><font size = 3>Daylight Savings</font></b>
+<br/>
+<br/>
+As Global Conflict is a global community daylight savings changes at different times for members. This means some confusion can arise as to when a battleday starts. To try and simplify things we have set the following rules to follow.	
+<br/>
+<br/>
+<ul>
+<li>When DST starts SBT will change with the Eurpoean time zone. <i>(US players start an hour later)</i></li>
+<br/>
+<li>When DST ends SBT will change with the US time zone. <i>(Euro players start an hour earlier)</i></li>
+<br/>
+<li>Black Ops battles will change with their respective areas time zone <i>(EUBO with European and NABO with US)</i></li>
+<br/>
+</ul>
+<br/>For more detailed information when exactly daylight savings go into and out of effect and to see what battles are affected by it see our <u><a href="http://www.global-conflict.org/wiki/index.php5?title=Daylight_Savings" target="_blank">Wiki</a></u>.
+<br/>
+<br/>
+<br/>
+<b><font size = 3>Countdown Timer</font></b>
+<br/>
+<br/>
+The custom timer we have on our front page shows when battles are going to start and is auto-updated after every battle. It also has the most frequently used timezones listed and their respective battleday start times. This is the easiest way to know exactly when you are supposed to play. Be on Teamspeak at least 30 minutes before the battle if possible.
+<br/>
+<br/>
+<font size = 0><i>Note: During the Daylight Savings change over, the front page countdown timer may be an hour out of date for the black ops battles.</i></font>
+<br/>
+<br/>
+<br/>
+<div id='battleday-countdown' style='text-align:center; font:bold 20px Verdana,Arial,Helvetica,sans-serif'></div>
+<div id='battleday-time' style='text-align:center; font: 14px Verdana,Arial,Helvetica,sans-serif'></div>
+<div>
+<br /><b><u>Battle Times:</u></b>
+<br /><b>Saturday:</b> SBT to SBT+6, <b>Tuesday:</b> SBT+2 to SBT+5 and SBT+8 to SBT+11
+<br /><b>SBT</b> = 10a Pacific, 12p Central, 1p Eastern, 17:00 UTC, 18:00 BST, 19:00 CET
+</div>
+
+
+
+<script type='text/javascript'>
+var KTimeSpan = (function(ms) {
+   this.totalMilliseconds = ms;
+   this.days = (ms > 0) ? Math.floor(ms / 86400000) : Math.ceil(ms / 86400000);
+   ms %= 86400000;
+   this.hours = (ms > 0) ? Math.floor(ms / 3600000) : Math.ceil(ms / 3600000);
+   ms %= 3600000;
+   this.minutes = (ms > 0) ? Math.floor(ms / 60000) : Math.ceil(ms / 60000);
+   ms %= 60000;
+   this.seconds = (ms > 0) ? Math.floor(ms / 1000) : Math.ceil(ms / 1000);
+   ms %= 1000;
+   this.milliseconds = ms;
+});
+
+KTimeSpan.prototype = {
+   isPassed: function() {
+      return (this.totalMilliseconds < 0);
+   },
+   isWithinHours: function(hours) { 
+      return (this.days === 0 && Math.abs(this.hours) < hours);
+   }
+}
+
+var bdcdDiv = document.getElementById('battleday-countdown');
+var bdtDiv = document.getElementById('battleday-time');
+
+
+bdates = {}
+function nextBattleday() {
+	var sbt = 17; // SBT in UTC is 18:00
+	var battles = {
+		// Name: [day, start hour, length in hours]
+		'Saturday Battle': [6, sbt, 6],
+		//'Black Ops #1': [2, sbt+2, 2],
+		//'Black Ops #2': [2, sbt+8, 2]
+	}
+
+	var now = new Date();
+	var today = now.getUTCDay();
+	
+	// Turns these into an array of dates. Could be useful later
+	var soonest;
+	for (var b in battles) {
+		var daysApart = (battles[b][0] - today) % 7;
+		var bdate = new Date();
+		bdate.setUTCDate(now.getUTCDate() + daysApart);
+		bdate.setUTCHours(battles[b][1]);
+		bdate.setUTCMinutes(0);
+		bdate.setUTCSeconds(0);
+		bdate.setUTCMilliseconds(0);
+		
+		// If the battleday already ended, next one is a week in the future
+		var diff = new KTimeSpan(bdate - now);
+		if (diff.isPassed() && !diff.isWithinHours(battles[b][2])) {
+			bdate.setUTCDate(bdate.getUTCDate() + 7);
+		}
+		
+		bdate.name = b;
+		bdate.length = battles[b][2];
+		bdates[b] = bdate;
+		if (!soonest || bdate < soonest) {soonest = bdate}
+	}
+	
+	// Returns the soonest date out of all of them
+	return soonest;
+}
+
+
+function updateBattledayCountdown() {
+   var now = new Date();
+   var bd = nextBattleday();
+   ts = new KTimeSpan(bd - now);
+   if (ts.isPassed() && ts.isWithinHours(bd.length)) {
+      bdcdDiv.innerHTML = "The battle is now<div style='color: #f00'>LIVE</div>0 Days, 0 Hours, 0 Minutes, 0 Seconds";
+	  bdtDiv.innerHTML = 'since <b>'+bd.toLocaleTimeString()+'</b> on <b>'+bd.toLocaleDateString()+'</b>';
+   } else {
+      bdcdDiv.innerHTML = "<div>Next battle day is <span style='color: #f00'>" + bd.name + "</span> in:</div>" + (ts.days ? ts.days + " Days, " : "") + ts.hours + " Hours, " + ts.minutes + " Minutes, " + ts.seconds + " Seconds";
+	  bdtDiv.innerHTML = 'at <b>'+bd.toLocaleTimeString()+'</b> on <b>'+bd.toLocaleDateString()+'</b>';
+   }
+   setTimeout('updateBattledayCountdown()',1000);  
+}
+updateBattledayCountdown();
+</script>
+<br/>
+<br/>
+<b><font size = 3>World Clock</font></b>
+<br/>
+<br/>
+This is a world clock with different timezones to help people determine what time it is in other countries. Click a timezone, right click and hit play. You can also drag two or more timezones out of their position and do comparisons between them. 
+<br/>
+<br/>
+<font size = 0><i>Note: If the image below isn't shown just refresh this page</i></font>
+<br/>
+<br/>
+<script src="http://www.clocklink.com/embed.js"></script><script type="text/javascript" language="JavaScript">obj=new Object;obj.clockfile="world001-gray.swf";obj.TimeZone="CET";obj.width=950;obj.height=500;obj.wmode="transparent";showClock(obj);</script>
+</font>
+         
+         
+         
+      </p>
+   </div>
+
+   <span class="corners-bottom"><span></span></span></div>
+</div>
+
+<!-- INCLUDE jumpbox.html -->
+<!-- INCLUDE overall_footer.html -->

@@ -31,6 +31,7 @@ $battle_name = '';
 $battle_start = 0;
 $battle_end = 0;
 $local_time = '';
+$local_string  = '';
 if($row)
 {
 	/*Time need to be *1000 as javascript does eveything in ms*/
@@ -109,9 +110,9 @@ foreach($rowset as $topics_row)
 	$topic_link = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $topics_row['forum_id'] . '&amp;t=' . $topics_row['topic_id']);
 	$topic_views = $topics_row['topic_views'];
 	
-	$row['bbcode_options'] = (($row['enable_bbcode']) ? OPTION_FLAG_BBCODE : 0) +
-								(($row['enable_smilies']) ? OPTION_FLAG_SMILIES : 0) + 
-								(($row['enable_magic_url']) ? OPTION_FLAG_LINKS : 0);
+	$topics_row['bbcode_options'] = (($topics_row['enable_bbcode']) ? OPTION_FLAG_BBCODE : 0) +
+								(($topics_row['enable_smilies']) ? OPTION_FLAG_SMILIES : 0) + 
+								(($topics_row['enable_magic_url']) ? OPTION_FLAG_LINKS : 0);
 	$post_text = generate_text_for_display($topics_row['post_text'], $topics_row['bbcode_uid'], $topics_row['bbcode_bitfield'], $topics_row['bbcode_options']);
 
 	$topic_title = censor_text($topic_title);
